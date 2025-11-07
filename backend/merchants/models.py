@@ -1,5 +1,6 @@
 from django.db import models
 import uuid
+from django.conf import settings
 # Create your models here.
 class MerchantStatus(models.Model):
     code = models.CharField(primary_key=True, max_length=20)
@@ -22,7 +23,7 @@ class Merchant(models.Model):
     )
 
     receivable_balance = models.DecimalField(
-        max_digits=12,
+        max_digits=10,
         decimal_places=2,
         default=0.00,
         help_text="ยอดจำลอง T+1 Settlement ที่ต้องโอนให้ร้าน"
@@ -33,3 +34,22 @@ class Merchant(models.Model):
 
     def __str__(self):
         return self.name
+
+class MerchantUser(models.Model):
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE)
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('merchant', 'user')
+
+    def __str__(self):
+        return f"{self.user.email} @ {self.merchant.name}"
