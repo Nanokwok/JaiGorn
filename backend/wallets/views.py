@@ -4,7 +4,7 @@ from rest_framework import status,generics
 from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 from .serializers import CustomerPaySerializer, InstallmentBillSerializer
-from .services import execute_bnpl_transaction, BNPLServiceError
+from .services import execute_bnpl_transaction, BNPLServiceError, execute_bill_repayment
 from .models import PaymentRequest, InstallmentBill
 from django.db.models import Q
 
@@ -58,3 +58,32 @@ class UnpaidBillListView(generics.ListAPIView):
         ).select_related(
             'transaction__payment_request__merchant'
         )
+
+
+class RepayBillAPIView(generics.GenericAPIView):
+
+    permission_classes = [IsAuthenticated]
+    queryset = InstallmentBill.objects.all()
+
+    def post(self, request, pk, *args, **kwargs):
+        try:
+            paid_bill = execute_bill_repayment(
+                user=request.user,
+                bill_id=pk
+            )
+            return Response(
+                {"message": f"ชำระบิล ID: {paid_bill.id} สำเร็จแล้ว"},
+                status=status.HTTP_200_OK
+            )
+
+        except BNPLServiceError as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            logger.error(f"Unexpected error in PayInstallmentBillView for bill {pk}: {e}", exc_info=True)
+            return Response(
+                {"error": "ระบบขัดข้อง กรุณาลองใหม่อีกครั้ง", "detail": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
