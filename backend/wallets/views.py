@@ -1,9 +1,9 @@
 import logging
 from rest_framework.response import Response
-from rest_framework import status,generics
+from rest_framework import status, generics, permissions
 from rest_framework.permissions import IsAuthenticated
 # Create your views here.
-from .serializers import CustomerPaySerializer, InstallmentBillSerializer, CreditDataSerializer
+from .serializers import CustomerPaySerializer, InstallmentBillSerializer, CreditDataSerializer, HomeBillSerializer
 from .services import execute_bnpl_transaction, BNPLServiceError, execute_bill_repayment
 from .models import PaymentRequest, InstallmentBill, WalletAccount
 from django.db.models import Q
@@ -96,3 +96,16 @@ class CreditSummaryView(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.get_queryset().get(user=self.request.user)
+
+class HomeBillListView(generics.ListAPIView):
+
+    serializer_class = HomeBillSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+
+        return InstallmentBill.objects.filter(
+            account__user=self.request.user
+        ).select_related(
+            'transaction__payment_request__merchant'
+        ).order_by('due_date')
