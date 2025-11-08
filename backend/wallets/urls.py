@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CustomerPayView, UnpaidBillListView, RepayBillAPIView
+from .views import CustomerPayView, UnpaidBillListView, RepayBillAPIView, CreditSummaryView
 
 app_name = 'wallets'
 
@@ -22,4 +22,10 @@ urlpatterns = [
             RepayBillAPIView.as_view(),
             name='customer-pay-bill'
         ),
+
+    path(
+        'me/summary/',
+        CreditSummaryView.as_view(),
+        name='customer-credit-summary'
+    ),
 ]

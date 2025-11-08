@@ -3,9 +3,9 @@ from rest_framework.response import Response
 from rest_framework import status,generics
 from rest_framework.permissions import IsAuthenticated
 # Create your views here.
-from .serializers import CustomerPaySerializer, InstallmentBillSerializer
+from .serializers import CustomerPaySerializer, InstallmentBillSerializer, CreditDataSerializer
 from .services import execute_bnpl_transaction, BNPLServiceError, execute_bill_repayment
-from .models import PaymentRequest, InstallmentBill
+from .models import PaymentRequest, InstallmentBill, WalletAccount
 from django.db.models import Q
 
 logger = logging.getLogger(__name__)
@@ -87,3 +87,12 @@ class RepayBillAPIView(generics.GenericAPIView):
                 {"error": "ระบบขัดข้อง กรุณาลองใหม่อีกครั้ง", "detail": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+class CreditSummaryView(generics.RetrieveAPIView):
+
+    queryset = WalletAccount.objects.all()
+    serializer_class = CreditDataSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.get_queryset().get(user=self.request.user)
