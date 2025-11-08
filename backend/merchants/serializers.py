@@ -3,6 +3,7 @@ from wallets.models import PaymentRequest
 from .models import Merchant, MerchantUser, MerchantStatus
 from django.core.validators import MinValueValidator
 from decimal import Decimal
+from rest_framework.validators import UniqueValidator
 
 class MerchantNameSerializer(serializers.ModelSerializer):
 
@@ -38,7 +39,7 @@ class MerchantApplySerializer(serializers.ModelSerializer):
     tax_id = serializers.CharField(
         required=True,
         validators=[
-            serializers.UniqueValidator(
+            UniqueValidator(
                 queryset=Merchant.objects.all(),
                 message="Tax ID นี้ถูกลงทะเบียนแล้ว"
             )
