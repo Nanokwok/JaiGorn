@@ -1,6 +1,6 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from .serializers import PaymentRequestCreateSerializer, PaymentRequestDisplaySerializer, MerchantApplySerializer, CategorySerializer
+from .serializers import PaymentRequestCreateSerializer, PaymentRequestDisplaySerializer, MerchantApplySerializer, CategorySerializer, ShopDetailsSerializer
 from .models import Merchant, MerchantUser, MerchantStatus, Category
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from django.db import transaction
@@ -92,3 +92,16 @@ class CategoryListView(generics.ListAPIView):
     serializer_class = CategorySerializer
 
     permission_classes = [permissions.AllowAny]
+
+class ShopDetailsView(generics.RetrieveAPIView):
+
+    serializer_class = ShopDetailsSerializer
+    permission_classes = [permissions.AllowAny]
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        return Merchant.objects.prefetch_related(
+            'product_filters',
+            'products',
+            'product_categories__products'
+        ).filter(status__code='ACTIVE')

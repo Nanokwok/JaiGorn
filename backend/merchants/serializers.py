@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from wallets.models import PaymentRequest
-from .models import Merchant, MerchantUser, MerchantStatus, Category
+from .models import Merchant, MerchantUser, MerchantStatus, Category, Product, ProductCategory
 from django.core.validators import MinValueValidator
 from decimal import Decimal
 from rest_framework.validators import UniqueValidator
@@ -79,3 +79,31 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
             model = Category
             fields = ['title', 'data']
+
+class ProductIdSerializer(serializers.ModelSerializer):
+    """Serializer สำหรับแสดง ID ของ Product เท่านั้น"""
+    class Meta:
+        model = Product
+        fields = ['id']
+
+class ShopDetailCategorySerializer(serializers.ModelSerializer):
+    """Serializer สำหรับหมวดหมู่สินค้าที่แสดงรายการ Product ID"""
+    title = serializers.CharField(source='name')
+    products = serializers.StringRelatedField(many=True)
+
+    class Meta:
+        model = ProductCategory
+        fields = ['title', 'products']
+
+class ShopDetailsSerializer(serializers.ModelSerializer):
+
+    filters = serializers.StringRelatedField(source='product_filters', many=True)
+    highlight = serializers.SerializerMethodField()
+    categories = ShopDetailCategorySerializer(source='product_categories', many=True)
+
+    class Meta:
+        model = Merchant
+        fields = ['id', 'name', 'filters', 'highlight', 'categories']
+
+    def get_highlight(self, obj: Merchant) -> list[str]:
+        return list(obj.products.filter(is_highlight=True).values_list('id', flat=True))
