@@ -19,8 +19,6 @@ const apiClient = axios.create({
   timeout: 10000,
 })
 
-// --- 1. Request Interceptor ---
-// Add the access token to every request
 apiClient.interceptors.request.use(
   async (config) => {
     const accessToken = await getAccessToken()
@@ -34,42 +32,31 @@ apiClient.interceptors.request.use(
   }
 )
 
-// --- 2. Response Interceptor ---
-// Handle 401 errors (expired tokens) by trying to refresh
 apiClient.interceptors.response.use(
-  (response) => response, // All 2xx responses pass through
+  (response) => response,
   async (error) => {
     const originalRequest = error.config
 
-    // Check for 401 error and ensure it's not a retry
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
 
       try {
         const currentRefreshToken = await getRefreshToken()
         if (!currentRefreshToken) {
-          // If no refresh token, logout (or redirect to login)
           await deleteTokens()
-          // You might want to redirect to login here using the router
           return Promise.reject(error)
         }
 
-        // --- Call the refresh token API ---
         const response = await refreshAuthToken(currentRefreshToken)
         const { access, refresh } = response.data
 
-        // Save new tokens
         await saveTokens(access, refresh)
 
-        // Update the header of the original request
         originalRequest.headers.Authorization = `Bearer ${access}`
 
-        // Retry the original request
         return apiClient(originalRequest)
       } catch (refreshError) {
-        // If refresh fails, delete all tokens and reject
         await deleteTokens()
-        // You might want to redirect to login here
         return Promise.reject(refreshError)
       }
     }
