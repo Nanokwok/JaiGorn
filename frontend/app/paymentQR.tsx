@@ -130,7 +130,7 @@ export default function PaymentQRScreen() {
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`
   }
 
-  const qrUrl = `https://placehold.co/250x250/000/FFF?text=Scan+Me%0A${total}`
+  const qrUrl = `https://hexdocs.pm/qr_code/2.2.1/docs/qrcode.svg`
 
   return (
     <SafeAreaView style={styles.safeAreaWrapper} edges={['bottom']}>
