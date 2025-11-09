@@ -5,6 +5,10 @@ from .models import Merchant, MerchantUser, MerchantStatus, Category
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from django.db import transaction
 from django.db.models import Prefetch
+from rest_framework.views import APIView 
+from .models import Product 
+from .serializers import ProductSerializer 
+from django.shortcuts import get_object_or_404
 
 class MerchantRequestTransactionView(generics.CreateAPIView):
 
@@ -105,3 +109,18 @@ class ShopDetailsView(generics.RetrieveAPIView):
             'products',
             'product_categories__products'
         ).filter(status__code='ACTIVE')
+    
+class MerchantProductDictView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, merchant_id, format=None):
+
+        merchant = get_object_or_404(Merchant, pk=merchant_id)
+        products = Product.objects.filter(merchant=merchant)
+        serializer = ProductSerializer(products, many=True)
+        product_dict = {}
+
+        for item in serializer.data:
+            product_dict[item['id']] = item
+
+        return Response(product_dict, status=status.HTTP_200_OK)

@@ -4,6 +4,7 @@ from .models import Merchant, MerchantUser, MerchantStatus, Category, Product, P
 from django.core.validators import MinValueValidator
 from decimal import Decimal
 from rest_framework.validators import UniqueValidator
+from .models import Product
 
 class MerchantNameSerializer(serializers.ModelSerializer):
 
@@ -107,3 +108,8 @@ class ShopDetailsSerializer(serializers.ModelSerializer):
 
     def get_highlight(self, obj: Merchant) -> list[str]:
         return list(obj.products.filter(is_highlight=True).values_list('id', flat=True))
+    
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'price', 'image', 'description']
