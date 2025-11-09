@@ -33,6 +33,7 @@ const getDynamicStyles = (themeColors: (typeof Colors)['light']) => {
       color: themeColors.secondaryText,
     },
     totalAmount: {
+      lineHeight:55,
       fontSize: 52,
       fontWeight: 'bold',
       color: themeColors.text,

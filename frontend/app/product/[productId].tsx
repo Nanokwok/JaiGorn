@@ -43,6 +43,7 @@ const getDynamicStyles = (themeColors: (typeof Colors)['light']) => {
       marginBottom: 8,
     },
     price: {
+      lineHeight:30,
       fontSize: 28,
       fontWeight: 'bold',
       color: themeColors.tint,
