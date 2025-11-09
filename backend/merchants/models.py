@@ -10,7 +10,7 @@ class MerchantStatus(models.Model):
         return self.name
 
 class Merchant(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     name = models.CharField(max_length=255)
     tax_id = models.CharField(max_length=20, unique=True)
     contact_email = models.EmailField(blank=True)
