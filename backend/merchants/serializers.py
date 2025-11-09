@@ -81,13 +81,13 @@ class CategorySerializer(serializers.ModelSerializer):
             fields = ['title', 'data']
 
 class ProductIdSerializer(serializers.ModelSerializer):
-    """Serializer สำหรับแสดง ID ของ Product เท่านั้น"""
+
     class Meta:
         model = Product
         fields = ['id']
 
 class ShopDetailCategorySerializer(serializers.ModelSerializer):
-    """Serializer สำหรับหมวดหมู่สินค้าที่แสดงรายการ Product ID"""
+
     title = serializers.CharField(source='name')
     products = serializers.StringRelatedField(many=True)
 

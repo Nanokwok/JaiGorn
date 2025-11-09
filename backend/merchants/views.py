@@ -93,6 +93,27 @@ class CategoryListView(generics.ListAPIView):
 
     permission_classes = [permissions.AllowAny]
 
+class ShopAllDetailsListView(generics.ListAPIView):
+
+    serializer_class = ShopDetailsSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+
+        return Merchant.objects.prefetch_related(
+            'product_filters',
+            'products',
+            'product_categories__products'
+        ).filter(status__code='ACTIVE').order_by('name')
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+
+        data = {item['id']: item for item in serializer.data}
+
+        return Response(data)
+
 class ShopDetailsView(generics.RetrieveAPIView):
 
     serializer_class = ShopDetailsSerializer
