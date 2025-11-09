@@ -75,9 +75,10 @@ const getStyles = (themeColors: (typeof Colors)['light']) =>
       marginVertical: 5,
     },
     cardAmount: {
+      lineHeight: 40,
       color: themeColors.tintForeground,
       fontSize: 28,
-      fontWeight: 'bold',
+      fontWeight: '800',
     },
     cardEyeIcon: {
       padding: 5,

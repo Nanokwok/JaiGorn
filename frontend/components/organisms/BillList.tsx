@@ -22,7 +22,7 @@ export const BillList = ({
 
   return (
     <View style={styles.sectionContainer}>
-      <SectionHeader title="Your Bills" />
+      <SectionHeader title="Your ฆBills" />
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
