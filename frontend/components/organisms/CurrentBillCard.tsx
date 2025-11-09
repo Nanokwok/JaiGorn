@@ -70,6 +70,7 @@ const getStyles = (themeColors: (typeof Colors)['light']) =>
       color: themeColors.secondaryText,
     },
     currentBillAmount: {
+      lineHeight: 50,
       fontSize: 42,
       fontWeight: 'bold',
       color: themeColors.text,

@@ -29,6 +29,7 @@ const getDynamicStyles = (themeColors: (typeof Colors)['light']) => {
     },
     title: {
       fontSize: 32,
+      //lineHeight: 40,
       fontWeight: 'bold',
       color: themeColors.tint,
       textAlign: 'center',
@@ -130,7 +131,7 @@ export default function LoginScreen() {
     <SafeAreaView style={styles.safeAreaWrapper} edges={['bottom']}>
       <Stack.Screen options={{ headerShown: false }} />
       <ScrollView contentContainerStyle={styles.container}>
-        <ThemedText style={styles.title}>JAIGORN</ThemedText>
+        <Text style={styles.title}>JAI KORN</Text>
         <ThemedText style={styles.subtitle}>Welcome Back</ThemedText>
 
         <View style={styles.inputContainer}>

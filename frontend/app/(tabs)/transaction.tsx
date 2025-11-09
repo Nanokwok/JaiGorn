@@ -41,6 +41,7 @@ const getDynamicStyles = (themeColors: (typeof Colors)['light']) => {
       paddingBottom: 10,
     },
     title: {
+      lineHeight: 30,
       fontSize: 28,
       fontWeight: 'bold',
       color: themeColors.text,

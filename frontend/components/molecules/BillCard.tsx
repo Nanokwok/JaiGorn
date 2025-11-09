@@ -54,6 +54,7 @@ const getStyles = (themeColors: (typeof Colors)['light']) =>
       shadowOpacity: 0.1,
       shadowRadius: 3,
       elevation: 3,
+      minHeight: 110,
     },
     billCardContent: {
       flexDirection: 'row',

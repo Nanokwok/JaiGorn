@@ -30,6 +30,7 @@ const getDynamicStyles = (themeColors: (typeof Colors)['light']) => {
       marginBottom: 10,
     },
     total: {
+      lineHeight:50,
       fontSize: 48,
       fontWeight: 'bold',
       color: themeColors.text,

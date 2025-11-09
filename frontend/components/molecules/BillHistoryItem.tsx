@@ -29,7 +29,7 @@ export const BillHistoryItem = ({
           <Ionicons name="receipt-outline" size={20} color={themeColors.icon} />
         </View>
         <View style={styles.historyItemInfo}>
-          <ThemedText style={styles.historyItemTitle}>{item.month}</ThemedText>
+          <ThemedText style={styles.historyItemTitle} >{item.month}</ThemedText>
           <ThemedText
             style={[
               styles.historyItemStatus,

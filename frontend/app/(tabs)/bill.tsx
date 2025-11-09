@@ -35,6 +35,7 @@ const getDynamicStyles = (themeColors: (typeof Colors)['light']) => {
     },
     container: {
       flex: 1,
+      
     },
     header: {
       paddingHorizontal: 20,
@@ -42,6 +43,7 @@ const getDynamicStyles = (themeColors: (typeof Colors)['light']) => {
       paddingBottom: 20,
     },
     title: {
+      lineHeight: 30,
       fontSize: 28,
       fontWeight: 'bold',
       color: themeColors.text,
@@ -77,7 +79,8 @@ export default function BillScreen() {
     <SafeAreaView style={styles.safeAreaWrapper} edges={['top']}>
       <Stack.Screen options={{ title: 'Bills' }} />
       <ThemedView style={styles.safeArea}>
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container}
+        >
           <View style={styles.header}>
             <ThemedText style={styles.title}>Your Bills</ThemedText>
           </View>
@@ -101,6 +104,7 @@ export default function BillScreen() {
           )}
 
           <ThemedText style={styles.historyHeader}>Bill History</ThemedText>
+          
           {billHistory.map((item) => (
             <BillHistoryItem
               key={item.id}
